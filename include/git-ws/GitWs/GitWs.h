@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <SSVUtils/SSVUtils.h>
+#include <SSVUtilsJson/SSVUtilsJson.h>
 #include "git-ws/CommandLine/CommandLine.h"
 
 namespace gitws
@@ -32,6 +33,7 @@ namespace gitws
 			void initCmdGitg();
 			void initCmdDo();
 			void initCmdQuery();
+			void initGenRepoCache();
 
 			void initRepoPaths();
 			void initCmds();
