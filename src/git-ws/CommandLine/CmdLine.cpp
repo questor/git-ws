@@ -24,6 +24,11 @@ namespace ssvcl
 	{
 		deque<string> args{begin(mArgs), end(mArgs)};
 
+		if(mArgs.size() == 0) {
+			log("no command specified!");
+			return;
+		}
+
 		Cmd& cmd(findCmd(args.front()));
 		args.pop_front();
 
