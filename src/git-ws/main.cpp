@@ -11,10 +11,18 @@
 int main(int argc, char* argv[])
 {
 	std::vector<std::string> args;
-	for(int i{1}; i < argc; ++i) args.push_back(argv[i]);
+	for(int i{1}; i < argc; ++i) 
+      args.push_back(argv[i]);
 
-	try { gitws::GitWs{args}; }
-	catch(std::runtime_error mException) { ssvu::log(mException.what()); return 1; }
+   if(argc == 1) {      //no command, place "help"
+      args.push_back("help");
+   }
 
+	try { 
+      gitws::GitWs{args}; 
+   } catch(std::runtime_error mException) { 
+      ssvu::log(mException.what()); 
+      return 1; 
+   }
 	return 0;
 }

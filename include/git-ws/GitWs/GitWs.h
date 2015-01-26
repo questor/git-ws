@@ -21,6 +21,7 @@ namespace gitws
 
 			std::vector<std::string> getAheadRepoPaths();
 			std::vector<std::string> getChangedRepoPaths();
+			std::vector<std::string> getUpdatedRepoPaths();
 
 			std::vector<std::string> runShInPath(const std::string& mPath, const std::string& mCommand);
 			void runShInRepos(const std::vector<std::string>& mRepoPaths, const std::string& mCommand, bool mPrintEmpty = false);
@@ -33,6 +34,7 @@ namespace gitws
 			void initCmdGitg();
 			void initCmdDo();
 			void initCmdQuery();
+			void initCmdSearchUpdates();
 			void initGenRepoCache();
 
 			void initRepoPaths();

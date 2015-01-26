@@ -37,6 +37,24 @@ vector<string> GitWs::getChangedRepoPaths() {
     return result;
 }
 
+vector<string> GitWs::getUpdatedRepoPaths() {
+    vector<string> result;
+    for (const auto & p : repoPaths) {
+        log("checking "+p);
+        auto currentRev = runShInPath(p, "git rev-parse @{0}");
+        auto remoteRev = runShInPath(p, "git ls-remote origin -h refs/heads/master");
+
+        if(remoteRev[0].find(currentRev[0]) == 0) {
+            //log("\033[F"+p+" is up-to-date");
+            log("\033[F\033[F");
+        } else {
+            log("\033[F"+p+" -> has changes on server");
+            //result.push_back(p);
+        }
+    }
+    return result;
+}
+
 vector<string> GitWs::runShInPath(const string &mPath, const string &mCommand) {
     FILE *pipe {
     	popen(string{"(cd " + mPath + ";" + mCommand + ")"} .c_str(), "r")
@@ -76,14 +94,11 @@ void GitWs::initCmdHelp() {
             log("");
 
             for (const auto & c : cmdLine.getCmds()) {
-                log(c->getNamesString(), "Command help");
                 log(c->getNamesString() + " " + c->getArgsString() + " " + c->getOptArgsString() + " " + c->getFlagsString());
-                log("");
             }
         }
 
         auto & c(cmdLine.findCmd(optArg.get()));
-        log(c.getNamesString(), "Command help");
         log(c.getNamesString() + " " + c.getArgsString() + " " + c.getOptArgsString() + " " + c.getFlagsString());
     };
 }
@@ -165,17 +180,31 @@ void GitWs::initCmdDo() {
 }
 
 void GitWs::initCmdQuery() {
-    cmdLine.create({"query"}) += [&] {
-        log("<<ALL REPO PATHS>>", "----");
-        for (const auto & p : repoPaths)
-            log(p);
-        log("", "----"); log(""); log("");
+    auto &cmd(cmdLine.create({"q", "query"}));
+    auto &flagAll(cmd.createFlag("a", "show-all"));
+    cmd += [&] {
+        if(flagAll) {
+            log("<<ALL REPO PATHS>>", "----");
+            for (const auto & p : repoPaths)
+                log(p);
+            log("", "----"); log(""); log("");
+        }
         log("<<CHANGED REPO PATHS (can commit)>>", "----");
         for (const auto & p : getChangedRepoPaths())
             log(p);
         log("", "----"); log(""); log("");
         log("<<AHEAD REPO PATHS (can push)>>", "----");
         for (const auto & p : getAheadRepoPaths())
+            log(p);
+        log("", "----"); log(""); log("");
+    };
+}
+
+void GitWs::initCmdSearchUpdates() {
+    auto &cmd(cmdLine.create({"su", "search-updates"}));
+    cmd += [&] {
+        log("<<SEARCHING FOR REMOTE UPDATES>>", "----");
+        for (const auto &p : getUpdatedRepoPaths())
             log(p);
         log("", "----"); log(""); log("");
     };
@@ -228,6 +257,7 @@ void GitWs::initCmds() {
     initCmdGitg();
     initCmdDo();
     initCmdQuery();
+    initCmdSearchUpdates();
     initGenRepoCache();
 }
 

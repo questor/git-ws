@@ -62,9 +62,12 @@ namespace ssvcl
 			args.pop_front();
 		}
 
-		for(unsigned int i{0}; i < cArgs.size(); ++i) cmd.setArgValue(i, cArgs[i]);
-		for(unsigned int i{0}; i < cOptArgs.size(); ++i) cmd.setOptArgValue(i, cOptArgs[i]);
-		for(const auto& f : cFlags) cmd.activateFlag(f);
+		for(unsigned int i{0}; i < cArgs.size(); ++i) 
+			cmd.setArgValue(i, cArgs[i]);
+		for(unsigned int i{0}; i < cOptArgs.size(); ++i) 
+			cmd.setOptArgValue(i, cOptArgs[i]);
+		for(const auto& f : cFlags) 
+			cmd.activateFlag(f);
 		cmd();
 	}
 	const vector<Cmd*>& CmdLine::getCmds() const { return cmds; }

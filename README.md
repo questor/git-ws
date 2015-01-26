@@ -3,7 +3,19 @@
 Command line utility to work with multiple git repositories at once <br/>
 Currently intended for personal use only, but quite functional
 
+## How to compile
 
+* cd extlibs/SSV...
+* cmake .
+* make
+* sudo make install
+
+three times for each lib
+
+afterwards in the project root
+* cmake .
+* make
+* sudo make install
 
 ## Usage
 
